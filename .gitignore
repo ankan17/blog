@@ -3,8 +3,4 @@ dist
 .astro
 .env*
 .DS_Store
-.impeccable/config.local.json
-.impeccable/mocks/
-.impeccable/review/
-.impeccable/questions/
-.impeccable/hook.cache.json
+.impeccable/

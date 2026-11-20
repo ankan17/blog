@@ -1,6 +1,6 @@
 # Agent instructions
 
-Blog "One Level Deeper" (Astro, static). Follow `PRODUCT.md` and `.impeccable/surfaces/src-layouts-post-astro.md`; once `DESIGN.md` exists it is the design authority. Build history: `docs/build-plan.md`.
+Blog "One Level Deeper" (Astro, static). Follow `PRODUCT.md`; `DESIGN.md` is the design authority. Build history: `docs/build-plan.md`.
 
 ## Drafting a post
 - Create `src/content/posts/<slug>.md` with `draft: true` on branch `draft/<slug>`, push, and open (or reuse) the PR `Draft: <title>`. That PR is the draft's session (`docs/build-plan.md` §4.0).
