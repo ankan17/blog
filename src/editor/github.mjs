@@ -5,6 +5,10 @@ import { HttpError, fromBase64, toBase64 } from './core.mjs';
 
 export const branchOf = (slug) => `draft/${slug}`;
 const notFound = (e) => e?.status === 404;
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+/** GitHub computes mergeability after a push; merging at once gets a 405. */
+export const timing = { poll: 750, tries: 12 };
 
 export function github(api, owner, name) {
   const base = `repos/${owner}/${name}`;
@@ -51,7 +55,20 @@ export function github(api, owner, name) {
         }))
       );
     },
-    merge: (number, title) => api('PUT', `${base}/pulls/${number}/merge`, { merge_method: 'squash', commit_title: title }),
+    async merge(number, title) {
+      for (let i = 0; i < timing.tries; i++) {
+        if ((await api('GET', `${base}/pulls/${number}`)).mergeable !== null) break;
+        await sleep(timing.poll);
+      }
+      for (let i = 0; ; i++) {
+        try {
+          return await api('PUT', `${base}/pulls/${number}/merge`, { merge_method: 'squash', commit_title: title });
+        } catch (e) {
+          if (e.status !== 405 || i >= 3) throw e;
+          await sleep(timing.poll);
+        }
+      }
+    },
     deleteBranch: (branch) => api('DELETE', `${base}/git/refs/heads/${branch}`),
   };
 }

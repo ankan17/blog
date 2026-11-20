@@ -45,12 +45,17 @@ export function fakeGithub(owner = 'o', repo = 'r') {
       return prs.filter((x) => x.state === 'open' && x.head === head);
     }
     if (method === 'POST' && p === `${base}/pulls`) {
-      const pr = { number: prs.length + 1, html_url: `https://github.com/${owner}/${repo}/pull/${prs.length + 1}`, state: 'open', head: body.head, title: body.title };
+      const pr = { number: prs.length + 1, html_url: `https://github.com/${owner}/${repo}/pull/${prs.length + 1}`, state: 'open', head: body.head, title: body.title, pending: 2 };
       prs.push(pr);
       return pr;
     }
+    if (method === 'GET' && (m = p.match(/pulls\/(\d+)$/))) {
+      const pr = prs[Number(m[1]) - 1];
+      return { ...pr, mergeable: pr.pending > 0 && pr.pending-- ? null : true };
+    }
     if (method === 'PUT' && (m = p.match(/pulls\/(\d+)\/merge$/))) {
       const pr = prs[Number(m[1]) - 1];
+      if (pr.pending > 0) throw fail(405, 'Pull Request is not mergeable');
       pr.state = 'merged';
       for (const [k, v] of files) if (k.startsWith(`${pr.head}:`)) files.set(`main:${k.slice(pr.head.length + 1)}`, v);
       return { merged: true };

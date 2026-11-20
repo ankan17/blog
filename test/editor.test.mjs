@@ -3,7 +3,9 @@ import assert from 'node:assert/strict';
 import {
   HttpError, hash, splitPost, listBlocks, applyEdit, applyEdits, applyMeta, publishHead, titleOf,
 } from '../src/editor/core.mjs';
-import { github, pushDraft, publishDraft } from '../src/editor/github.mjs';
+import { github, pushDraft, publishDraft, timing } from '../src/editor/github.mjs';
+
+timing.poll = 1;
 import { handle } from '../worker/index.mjs';
 import { fakeGithub } from './fake-github.mjs';
 
@@ -84,6 +86,28 @@ test('a branch that moved under the author is a 409 and is never overwritten', a
     (e) => e.status === 409 && /newer changes/.test(e.message),
   );
   assert.equal(fake.files.get(`draft/demo:${REL}`).content, before);
+});
+
+test('publish waits for GitHub to compute mergeability instead of failing with 405', async () => {
+  const fake = fakeGithub();
+  const gh = github(fake.api, 'o', 'r');
+  await pushDraft(gh, { rel: REL, slug: 'demo', content: POST, title: 'Demo', isConflict: never });
+  assert.equal(fake.prs[0].pending, 2, 'a fresh PR has no mergeability yet');
+  await gh.merge(1, 'Demo');
+  assert.equal(fake.prs[0].state, 'merged');
+  assert.ok(fake.log.filter((l) => l.startsWith('GET pulls/1')).length >= 3, 'polled before merging');
+});
+
+test('a 405 that outlives the retries is reported, not swallowed', async () => {
+  const fake = fakeGithub();
+  const gh = github(fake.api, 'o', 'r');
+  await pushDraft(gh, { rel: REL, slug: 'demo', content: POST, title: 'Demo', isConflict: never });
+  fake.prs[0].pending = 1e9;
+  const tries = timing.tries;
+  timing.tries = 1;
+  await assert.rejects(gh.merge(1, 'Demo'), (e) => e.status === 405);
+  timing.tries = tries;
+  assert.equal(fake.prs[0].state, 'open');
 });
 
 test('publish commits the published header, merges and deletes the branch', async () => {
