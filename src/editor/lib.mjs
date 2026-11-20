@@ -170,7 +170,8 @@ export async function getSession(file) {
   };
 }
 
-async function pushDraft(repo, abs, content, title) {
+// `local` is the file as the author has it now; `content` is what gets pushed (publish changes the header).
+async function pushDraft(repo, abs, content, title, local = content) {
   const rel = relOf(abs);
   const branch = `draft/${slugOf(abs)}`;
   let ref = null;
@@ -181,7 +182,7 @@ async function pushDraft(repo, abs, content, title) {
   }
   const remote = await branchFile(repo, rel, branch);
   const state = await readState();
-  if (remote && remote.content !== content && state[rel]?.blob !== remote.sha) {
+  if (remote && remote.content !== local && state[rel]?.blob !== remote.sha) {
     throw new HttpError(409, 'The PR has newer changes. Pull them in first.');
   }
   const res = await api(['-X', 'PUT', `${repo.base}/contents/${rel}`], {
@@ -204,24 +205,26 @@ async function pushDraft(repo, abs, content, title) {
   return { branch, prUrl: pr.html_url, prNumber: pr.number, commit: res.commit.sha };
 }
 
+// The author's local date, not UTC, so a post is never dated a day early.
+const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+
 const titleOf = (head) => JSON.parse(head.match(/^title:\s*(.+)$/m)?.[1] ?? '""');
 
 export async function saveDraft(file) {
   const post = await readPost(file);
   const repo = await repoOf();
-  return pushDraft(repo, post.abs, post.raw, titleOf(post.head));
+  return pushDraft(repo, post.abs, post.raw, titleOf(post.head), post.raw);
 }
 
 export async function publish(file) {
   const post = await readPost(file);
   const repo = await repoOf();
-  const today = new Date().toISOString().slice(0, 10);
-  let head = post.head.replace(/^draft:.*$/m, 'draft: false');
-  head = /^date:/m.test(head) ? head.replace(/^date:.*$/m, `date: ${today}`) : head;
+    let head = post.head.replace(/^draft:.*$/m, 'draft: false');
+  head = /^date:/m.test(head) ? head.replace(/^date:.*$/m, `date: ${today()}`) : head;
   const title = titleOf(head);
   const steps = [];
-  const saved = await pushDraft(repo, post.abs, head + post.body, title);
-  steps.push(`Final commit ${saved.commit.slice(0, 7)} on ${saved.branch} (draft: false, date: ${today})`);
+  const saved = await pushDraft(repo, post.abs, head + post.body, title, post.raw);
+  steps.push(`Final commit ${saved.commit.slice(0, 7)} on ${saved.branch} (draft: false, date: ${today()})`);
   await api(['-X', 'PUT', `${repo.base}/pulls/${saved.prNumber}/merge`], { merge_method: 'squash', commit_title: title });
   steps.push(`Merged PR #${saved.prNumber} (squash) into main`);
   await api(['-X', 'DELETE', `${repo.base}/git/refs/heads/${saved.branch}`]);

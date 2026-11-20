@@ -8,6 +8,7 @@ const slug = title.toLowerCase().normalize('NFKD').replace(/[^\w\s-]/g, '').trim
 const file = `src/content/posts/${slug}.md`;
 if (existsSync(file)) { console.error(`Refusing to overwrite ${file}`); process.exit(1); }
 
-const today = new Date().toISOString().slice(0, 10);
+const now = new Date();
+const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 writeFileSync(file, `---\ntitle: ${JSON.stringify(title)}\ndescription: ""\ndate: ${today}\ntags: []\ndraft: true\n---\n\n## \n`);
 console.log(`Created ${file}\nDev URL: http://localhost:4321/${slug}/`);
