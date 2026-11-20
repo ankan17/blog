@@ -1,5 +1,5 @@
 ---
-title: "Cloud test (ignore)"
+title: "Cloud test (edited)"
 description: "A throwaway post that tests the cloud editor. It will be removed."
 date: 2026-11-21
 tags: []
@@ -8,6 +8,6 @@ draft: true
 
 ## Testing the cloud editor
 
-First paragraph.
+Edited from the cloud one.
 
-Second paragraph.
+Edited from the cloud two.
