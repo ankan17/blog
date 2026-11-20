@@ -116,7 +116,7 @@ async function repoOf() {
   } catch {
     throw new HttpError(412, NO_REPO);
   }
-  const m = url.trim().match(/github\.com[:/]([^/]+)\/(.+?)(?:\.git)?$/);
+  const m = url.trim().match(/^(?:git@|ssh:\/\/git@|https:\/\/)[^/:]+[:/]([^/]+)\/(.+?)(?:\.git)?$/);
   if (!m) throw new HttpError(412, NO_REPO);
   return { owner: m[1], name: m[2], base: `repos/${m[1]}/${m[2]}` };
 }
