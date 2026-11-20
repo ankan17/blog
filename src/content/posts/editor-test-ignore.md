@@ -1,9 +1,9 @@
 ---
 title: "Editor test (ignore)"
 description: "A throwaway post that tests the draft, PR and publish flow. It will be removed."
-date: 2026-11-21
+date: 2026-11-20
 tags: []
-draft: true
+draft: false
 ---
 
 ## Testing the flow
