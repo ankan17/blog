@@ -1,0 +1,11 @@
+---
+import { site } from '../lib/site';
+---
+<header class="hb">
+  <div>
+    <a class="strong l" href="/"><b>{site.title}</b></a>
+    <span class="l">{site.author}</span>
+    <a class="l dom" href={site.home}>ankanpoddar.dev</a>
+  </div>
+  <div><slot /></div>
+</header>

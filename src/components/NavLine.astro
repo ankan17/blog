@@ -1,0 +1,9 @@
+---
+import { site } from '../lib/site';
+---
+<nav class="navline" aria-label="Site">
+  <a href="/">Entries</a><span class="sep" aria-hidden="true">·</span>
+  <a href={site.earlier}>Earlier writing</a><span class="sep" aria-hidden="true">·</span>
+  <a href="/rss.xml">RSS</a><span class="sep" aria-hidden="true">·</span>
+  <button type="button" class="theme-toggle" data-theme-toggle hidden>Dark</button>
+</nav>

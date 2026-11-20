@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import HeaderBlock from '../components/HeaderBlock.astro';
+import NavLine from '../components/NavLine.astro';
+import EntryList from '../components/EntryList.astro';
+import { getEntries, site } from '../lib/site';
+
+const entries = await getEntries();
+const count = entries.filter((e) => e.number !== null).length;
+---
+<Base title={site.title} description={site.description} image="/og/index.png">
+  <HeaderBlock>
+    <span class="l garnet">Index</span>
+    <span class="l">{`${count} ${count === 1 ? 'entry' : 'entries'}`}</span>
+    <a class="l" href="/rss.xml">RSS</a>
+  </HeaderBlock>
+  <div class="title-block">
+    <h1>{site.title}</h1>
+    <p class="dek">{site.description}</p>
+    <NavLine />
+  </div>
+  <EntryList entries={entries} />
+</Base>

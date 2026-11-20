@@ -1,0 +1,57 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import HeaderBlock from '../components/HeaderBlock.astro';
+import NavLine from '../components/NavLine.astro';
+import { getEntries, entryLabel, longDate, isoDate } from '../lib/site';
+
+export const getStaticPaths = (async () => {
+  const entries = await getEntries();
+  return entries.map((entry, i) => ({
+    params: { slug: entry.post.id },
+    props: { entry, newer: entries[i - 1], older: entries[i + 1] },
+  }));
+}) satisfies GetStaticPaths;
+
+const { entry, newer, older } = Astro.props;
+const { post, number } = entry;
+const { Content, remarkPluginFrontmatter } = await render(post);
+const d = post.data;
+const isDraft = number === null;
+const dev = import.meta.env.DEV;
+// Neighbours in publication order: "previous" is the older entry.
+const prev = older?.number ? older : undefined;
+const next = newer?.number ? newer : undefined;
+---
+<Base title={d.title} description={d.description} type="article" image={`/og/${post.id}.png`} published={d.date} noindex={isDraft}>
+  <HeaderBlock>
+    {isDraft ? <span class="l garnet">DRAFT, not published</span> : <span class="l garnet">{entryLabel(number)}</span>}
+    <time class="l" datetime={isoDate(d.date)}>{longDate(d.date)}</time>
+    <span class="l">{`${remarkPluginFrontmatter.minutesRead} min read${d.tags.length > 0 ? ` · ${d.tags.join(', ')}` : ''}`}</span>
+  </HeaderBlock>
+  <div class="title-block">
+    <h1 data-editor-meta="title">{d.title}</h1>
+    <p class="dek" data-editor-meta="description">{d.description}</p>
+    <NavLine />
+  </div>
+  <article class="prose" data-editor-file={dev ? post.filePath : undefined} data-draft={dev && isDraft ? '' : undefined}>
+    <Content />
+  </article>
+  <div class="postfoot">
+    <div class="postmeta">
+      Published <time datetime={isoDate(d.date)}>{longDate(d.date)}</time>
+      {d.updated && <> · Updated <time datetime={isoDate(d.updated)}>{longDate(d.updated)}</time></>}
+      {d.tags.length > 0 && (
+        <br />
+        <>Tagged: {d.tags.map((t, i) => <>{i > 0 && ', '}<a href={`/tags/${t}/`}>{t}</a></>)}</>
+      )}
+    </div>
+    {(prev || next) && (
+      <nav class="neighbors" aria-label="Entries">
+        {prev && <a class="prev" href={`/${prev.post.id}/`}>← Entry {prev.number}: {prev.post.data.title}</a>}
+        {next && <a class="next" href={`/${next.post.id}/`}>Entry {next.number}: {next.post.data.title} →</a>}
+      </nav>
+    )}
+  </div>
+</Base>

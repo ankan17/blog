@@ -1,0 +1,21 @@
+---
+import { pad, shortDate, isoDate, type Entry } from '../lib/site';
+interface Props { entries: Entry[] }
+const { entries } = Astro.props;
+---
+{entries.length === 0 ? (
+  <p class="empty">No entries yet. The first one is being written.</p>
+) : (
+  <ol class="entries">
+    {entries.map(({ post, number }) => (
+      <li class="entry">
+        <span class="n">{number === null ? '' : pad(number)}</span>
+        <div>
+          <a class="t" href={`/${post.id}/`}>{post.data.title}</a>
+          <div class="d">{post.data.description}</div>
+        </div>
+        {number === null ? <span class="draft">Draft</span> : <time datetime={isoDate(post.data.date)}>{shortDate(post.data.date)}</time>}
+      </li>
+    ))}
+  </ol>
+)}

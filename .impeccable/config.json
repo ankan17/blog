@@ -1,0 +1,29 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "files": [
+          ".impeccable/mocks/decision/canon.html"
+        ],
+        "createdAt": "2026-11-20T10:01:31.739Z",
+        "reason": "model decided: canon card deliberately depicts the category-standard dev blog (Inter) as the standing exit; not a build file"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "source serif 4",
+        "createdAt": "2026-11-20T10:28:40.596Z",
+        "reason": "Same families as DESIGN.md typography (static-weight names for satori share image); fonts settled by author per docs/build-plan.md 2026-11-20"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "atkinson hyperlegible mono",
+        "createdAt": "2026-11-20T10:28:40.615Z",
+        "reason": "Same families as DESIGN.md typography (static-weight names for satori share image); fonts settled by author per docs/build-plan.md 2026-11-20"
+      }
+    ]
+  }
+}

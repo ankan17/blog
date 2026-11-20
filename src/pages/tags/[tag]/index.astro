@@ -1,0 +1,28 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../../layouts/Base.astro';
+import HeaderBlock from '../../../components/HeaderBlock.astro';
+import NavLine from '../../../components/NavLine.astro';
+import EntryList from '../../../components/EntryList.astro';
+import { getEntries } from '../../../lib/site';
+
+export const getStaticPaths = (async () => {
+  const entries = await getEntries();
+  const tags = [...new Set(entries.flatMap((e) => e.post.data.tags))];
+  return tags.map((tag) => ({ params: { tag }, props: { tag, entries: entries.filter((e) => e.post.data.tags.includes(tag)) } }));
+}) satisfies GetStaticPaths;
+
+const { tag, entries } = Astro.props;
+---
+<Base title={`Tagged: ${tag}`} description={`Entries tagged ${tag}.`} image="/og/index.png">
+  <HeaderBlock>
+    <span class="l garnet">Tag</span>
+    <span class="l">{`${entries.length} ${entries.length === 1 ? 'entry' : 'entries'}`}</span>
+    <a class="l" href="/">All entries</a>
+  </HeaderBlock>
+  <div class="title-block">
+    <h1>Tagged: {tag}</h1>
+    <NavLine />
+  </div>
+  <EntryList entries={entries} />
+</Base>
