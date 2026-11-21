@@ -16,7 +16,6 @@ interface Props {
 const { title, description, type = 'website', image, published, noindex } = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 const imageUrl = new URL(image, site.url).href;
-const cloudPreview = import.meta.env.EDITOR === 'cloud';
 const fullTitle = title === site.title ? title : `${title} · ${site.title}`;
 ---
 <!doctype html>
@@ -42,7 +41,6 @@ const fullTitle = title === site.title ? title : `${title} · ${site.title}`;
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={imageUrl} />
-    {cloudPreview && <meta name="build-commit" content={import.meta.env.WORKERS_CI_COMMIT_SHA ?? ''} />}
     <link rel="alternate" type="application/rss+xml" title={site.title} href="/rss.xml" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <script is:inline>

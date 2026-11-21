@@ -20,7 +20,7 @@ const { Content, remarkPluginFrontmatter } = await render(post);
 const d = post.data;
 const isDraft = number === null;
 // The editor (local dev server or cloud preview) needs to know which file this page is.
-const dev = import.meta.env.DEV || import.meta.env.EDITOR === 'cloud';
+const dev = import.meta.env.DEV || !!import.meta.env.EDITOR;
 // Neighbours in publication order: "previous" is the older entry.
 const prev = older?.number ? older : undefined;
 const next = newer?.number ? newer : undefined;

@@ -6,3 +6,6 @@ dist
 .impeccable/
 .dev.vars
 .wrangler/
+.artifact/
+.artifact.raw/
+.artifact-publish.json

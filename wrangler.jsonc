@@ -2,18 +2,9 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "blog",
   "compatibility_date": "2026-11-20",
-  "main": "worker/index.mjs",
   "assets": {
     "directory": "./dist",
-    "binding": "ASSETS",
-    "not_found_handling": "404-page",
-    "run_worker_first": ["/api/editor/*"]
-  },
-  "vars": {
-    "GITHUB_REPO": "ankan17/blog",
-    "ACCESS_TEAM_DOMAIN": "calm-dawn-244f.cloudflareaccess.com",
-    "ACCESS_AUD": "b9a73271c7303124c6c2bebbc2ff051fcb7ce5b9a453c2e24ac760351203a97d",
-    "ACCESS_EMAIL": "apoddar1701@gmail.com"
+    "not_found_handling": "404-page"
   },
   "routes": [{ "pattern": "blog.ankanpoddar.dev", "custom_domain": true }]
 }

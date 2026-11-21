@@ -14,10 +14,10 @@ export function editor() {
     name: 'blog-editor',
     hooks: {
       'astro:config:setup': ({ command, updateConfig, injectScript }) => {
-        // Local editor in `astro dev`; cloud editor only in preview builds (EDITOR=cloud).
-        // Production builds get neither.
-        if (command === 'build' && process.env.EDITOR === 'cloud') {
-          injectScript('page', "import '/src/editor/entry-cloud.ts';");
+        // Local editor in `astro dev`. The artifact editor only in `npm run artifact` builds
+        // (EDITOR=artifact). Production builds get neither.
+        if (command === 'build' && process.env.EDITOR === 'artifact') {
+          injectScript('page', "import '/src/editor/entry-artifact.ts';");
           return;
         }
         if (command !== 'dev') return;

@@ -1,5 +1,5 @@
-// Pure editor logic shared by the local dev server and the Cloudflare Worker.
-// No fs, no Buffer: only standard web APIs, so it runs in Node and in Workers.
+// Pure editor logic shared by the local dev server and the artifact build.
+// No fs, no Buffer: only standard web APIs.
 import { fromMarkdown } from 'mdast-util-from-markdown';
 import { gfm } from 'micromark-extension-gfm';
 import { gfmFromMarkdown } from 'mdast-util-gfm';
