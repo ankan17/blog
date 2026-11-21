@@ -14,8 +14,14 @@ export function editor() {
     name: 'blog-editor',
     hooks: {
       'astro:config:setup': ({ command, updateConfig, injectScript }) => {
+        // Local editor in `astro dev`; cloud editor only in preview builds (EDITOR=cloud).
+        // Production builds get neither.
+        if (command === 'build' && process.env.EDITOR === 'cloud') {
+          injectScript('page', "import '/src/editor/entry-cloud.ts';");
+          return;
+        }
         if (command !== 'dev') return;
-        injectScript('page', "import '/src/editor/client.ts';");
+        injectScript('page', "import '/src/editor/entry-local.ts';");
         updateConfig({
           vite: {
             plugins: [{

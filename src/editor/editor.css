@@ -15,3 +15,8 @@ body.ed-on [data-editor-meta] { cursor: text; }
 .ed-panel button { font: inherit; background: none; border: 0; color: var(--blue); text-decoration: underline; cursor: pointer; padding: 0; }
 .ed-err { color: var(--garnet); }
 body.ed-bar-on .sheet { padding-bottom: 120px; }
+
+.ed-pending { margin: 1.4em 0; max-width: 66ch; border: 1px dashed var(--blue); padding: 10px 14px; background: var(--well); cursor: text; }
+.ed-pending pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: 15px/1.6 var(--mono); color: var(--ink); }
+.ed-pending .cap { margin-top: 6px; font: 13px var(--mono); color: var(--soft); }
+.ed-meta-pending { outline: 1px dashed var(--blue); outline-offset: 6px; }
