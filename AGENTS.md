@@ -6,6 +6,9 @@ Blog "One Level Deeper" (Astro, static). Follow `PRODUCT.md`; `DESIGN.md` is the
 - Create `src/content/posts/<slug>.md` with `draft: true` on branch `draft/<slug>`, push, and open (or reuse) the PR `Draft: <title>`. That PR is the draft's session (see below).
 - Never set `draft: false` or merge unless the author says to publish (see "Publishing from the artifact").
 
+## Starting from a topic
+When the author gives only a topic ("draft a post about X"), or runs `/draft-post <topic>`, follow `.claude/skills/draft-post/SKILL.md`: ask a few questions first, agree a short outline, then draft on `draft/<slug>` and open the PR. Don't invent commands, outputs or numbers; ask for them or verify them by running them. Then iterate on the same branch until the author says "publish now".
+
 ## The draft session
 Each draft has one branch, `draft/<slug>`, created from `main` on first save, and one open PR `draft/<slug>` -> `main` titled `Draft: <title>`, reused for every later save. The local editor and agents share it.
 - Save draft writes the post to that branch through the GitHub API (`gh api`). Never switch or commit in the author's working tree. Commit message: `Save draft: <title>`.

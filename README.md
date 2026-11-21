@@ -1,22 +1,25 @@
 # One Level Deeper
 
-Source for blog.ankanpoddar.dev. Astro, static output, Markdown posts in `src/content/posts/`.
+A technical blog by Ankan Poddar, at **https://blog.ankanpoddar.dev**.
 
-## Writing
-1. An agent drafts a post (`npm run new -- "Title"` makes an empty one).
-2. `npm run dev`, then open `http://localhost:4321/<slug>/`.
-3. Press `E` (or click **Edit**), click any block, edit its Markdown, `⌘↵` to save.
-4. **Save draft** pushes to the PR `draft/<slug>`; **Publish** merges it.
+It's about the systems he's learning and building, and the small fixes that save hours. Every post explains the fix and then goes one level deeper into why it works. Problem first, dry humour, copy-pasteable commands.
 
-Needs a GitHub repo (`origin`) and an authenticated `gh` for Save draft and Publish. Without one, edits still save to the local file.
+- Read it: https://blog.ankanpoddar.dev
+- Subscribe: `https://blog.ankanpoddar.dev/rss.xml`
+- Earlier writing (2017): [Learn C With Me](https://ankanpoddar.dev/learncwithme/)
 
-### Editing in a Claude session
-`npm run artifact` builds the site as files for a Claude artifact, with the editor in it. Edits autosave to the artifact's database; telling the Claude session "publish now" applies them, opens the PR and merges it. See `AGENTS.md`.
+## About the site
+Static, fast, no trackers. Astro with Markdown posts in `src/content/posts/`, Shiki code highlighting with copy buttons, self-hosted fonts, and an RSS feed. Hosted on Cloudflare (Workers with static assets), deployed from `main`.
 
-## Commands
-`npm run dev` · `npm run build` · `npm run check` · `npm test` · `npm run preview` · `npm run artifact`
+Product intent is in `PRODUCT.md` and the design system is in `DESIGN.md`.
 
+## Running it locally
+```sh
+npm install
+npm run dev      # http://localhost:4321
+npm run build    # static output in dist/
+```
 Set `SHOW_DRAFTS=1` to include drafts in a build.
 
-## Deploy
-Cloudflare Workers with static assets (`wrangler.jsonc`), deployed from `main` by Workers Builds: build `npm run build`, deploy `npx wrangler deploy`, `NODE_VERSION=24`, domain `blog.ankanpoddar.dev`. Branches other than `main` are not built.
+## Writing a post
+Posts are Markdown files with `draft: true` until published. Each draft lives on a `draft/<slug>` branch with one PR, and publishing merges it. Instructions for the writing workflow, including drafting with Claude, are in `AGENTS.md`.

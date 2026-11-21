@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Astro (content collections, Markdown posts), static output, deployed as a **Cloudflare Worker with static assets** (built by Workers Builds; not Pages) at `https://blog.ankanpoddar.dev` from the public repo `ankan17/blog`. The same Worker serves a small `/api/editor/*` route used only by draft previews. Astro `site: 'https://blog.ankanpoddar.dev'`, no `base`. Node 22+ (the portfolio CI uses 24). Build `npm run build`, output `dist`. Fonts self-hosted via `@fontsource`. Shares no code or CSS with the portfolio.
+Astro (content collections, Markdown posts), static output, deployed as a **Cloudflare Worker with static assets** (built by Workers Builds; not Pages) at `https://blog.ankanpoddar.dev` from the public repo `ankan17/blog`. Astro `site: 'https://blog.ankanpoddar.dev'`, no `base`. Node 22+ (the portfolio CI uses 24). Build `npm run build`, output `dist`. Fonts self-hosted via `@fontsource`. Shares no code or CSS with the portfolio.
 
 ## Users
 
